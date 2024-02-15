@@ -93,14 +93,14 @@ abstract class BaseFileManager {
 }
 
 class PBXManager extends BaseFileManager {
-    bumpProjectVersion() {
+    bumpProjectVersion(resetCode: boolean = false) {
         const currentFile = this.read();
         const codeRegex = /CURRENT_PROJECT_VERSION = (\d+);/g;
         const currentCode = pipe2(
             matchFirst(codeRegex),
             parseDecimal,
         )(currentFile);
-        const nextCode = currentCode + 1;
+        const nextCode = resetCode ? 1 : currentCode + 1;
 
         this.content = replace(
             codeRegex,
@@ -261,13 +261,15 @@ class ProjectFilesManager {
     }
 
     bumpCodes() {
-        const { skipCodeFor } = this.configs;
+        const { skipCodeFor, skipSemVerFor } = this.configs;
 
         if (!skipCodeFor.includes("ios")) {
+            // If we are not skipping the semver bump, reset codeq, else bump code.
+            const resetCode = !skipSemVerFor.includes('all')
             const {
                 next: pbxNext,
                 current: pbxCurrent,
-            } = this.pbx.bumpProjectVersion();
+            } = this.pbx.bumpProjectVersion(resetCode);
             console.log(`iOS project.pbxproj code: ${pbxCurrent} -> ${pbxNext}`);
         }
 
