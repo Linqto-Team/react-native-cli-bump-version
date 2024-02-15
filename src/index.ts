@@ -100,6 +100,7 @@ class PBXManager extends BaseFileManager {
             matchFirst(codeRegex),
             parseDecimal,
         )(currentFile);
+        // If resetCode is true, set to 1, else increment code
         const nextCode = resetCode ? 1 : currentCode + 1;
 
         this.content = replace(
@@ -264,7 +265,8 @@ class ProjectFilesManager {
         const { skipCodeFor, skipSemVerFor } = this.configs;
 
         if (!skipCodeFor.includes("ios")) {
-            // If we are not skipping the semver bump, reset codeq, else bump code.
+            // Forked logic
+            // If we are not skipping the semver bump, reset code, else bump code.
             const resetCode = !skipSemVerFor.includes('all')
             const {
                 next: pbxNext,
