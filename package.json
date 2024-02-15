@@ -7,8 +7,7 @@
   "scripts": {
     "fmt": "dprint fmt",
     "test": "yarn build && jest",
-    "build": "tsc",
-    "prepare": "rm -rf ./lib/* && yarn test"
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/node": "^17.0.14",
